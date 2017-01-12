@@ -50,24 +50,26 @@ class Client
     public function setUrl($inputURL)
     {
         $this->inputUrl = $inputURL;
+
         return $this->inputUrl;
     }
 
     public function setQuality($qualityString = 'highish')
     {
         $this->searchString = (isset($this->quality_array[$qualityString])) ? $this->quality_array[$qualityString] : '';
+
         return $this->searchString;
     }
 
     public function getMediaISM()
     {
         // Set the media API url
-        $mediaSelectorURL = self::BASE_URL . '/mediaselector/5/select/version/2.0/mediaset/pc/vpid/' . $this->videoId;
+        $mediaSelectorURL = self::BASE_URL.'/mediaselector/5/select/version/2.0/mediaset/pc/vpid/'.$this->videoId;
 
         // Loop through
         $this->baseUrl = $this->getMediaSelection($mediaSelectorURL);
 
-        $this->discoveredUrl = str_replace(strrchr($this->baseUrl, '/'), '', $this->baseUrl) . '/';
+        $this->discoveredUrl = str_replace(strrchr($this->baseUrl, '/'), '', $this->baseUrl).'/';
 
         return $this->baseUrl;
     }
@@ -97,19 +99,19 @@ class Client
 
         // Loop through to check for URLs
         for ($x = 1; $x < $arrayLength; ++$x) {
-            $search_Text = '' . chr(0x22);
+            $search_Text = ''.chr(0x22);
             $xmlArray[$x] = strstr($xmlArray[$x], $search_Text);
 
             $search_Text = 'h';
             $xmlArray[$x] = strstr($xmlArray[$x], $search_Text);
 
-            $search_Text = '' . chr(0x22);
+            $search_Text = ''.chr(0x22);
             $xmlArray[$x] = strstr($xmlArray[$x], $search_Text, true);
 
             // Check if the url's are ISM links
             if (strpos($xmlArray[$x], '.ism/') != false) {
                 $xmlArray[$x] = strstr($xmlArray[$x], '.ism/', true);
-                $xmlArray[$x] = $xmlArray[$x] . '.ism';
+                $xmlArray[$x] = $xmlArray[$x].'.ism';
                 $bestResult = $xmlArray[$x];
             }
         }
@@ -136,8 +138,8 @@ class Client
     public function getM3u8()
     {
         // Set the m3u8 url and base url
-        $this->m3u8 = $this->baseUrl . '/' . $this->masterKey . '.m3u8';
-        $this->m3u8Base = str_replace(strrchr($this->m3u8, '/'), '', $this->m3u8) . '/';
+        $this->m3u8 = $this->baseUrl.'/'.$this->masterKey.'.m3u8';
+        $this->m3u8Base = str_replace(strrchr($this->m3u8, '/'), '', $this->m3u8).'/';
 
         return $this->m3u8;
     }
@@ -146,7 +148,7 @@ class Client
     {
         // Get the url for the stream data
         $this->streamUrl = $this->getStreamData($this->m3u8);
-        $this->m3u8DataLink = $this->m3u8Base . $this->streamUrl;
+        $this->m3u8DataLink = $this->m3u8Base.$this->streamUrl;
 
         return $this->m3u8DataLink;
     }
@@ -189,7 +191,7 @@ class Client
         foreach ($results as $result) {
             if (strpos($result, 'EXT-X-STREAM-INF:') > -1) {
                 if ($this->searchString > -1) {
-                    $bestResult = $this->masterKey . $this->searchString . '.m3u8';
+                    $bestResult = $this->masterKey.$this->searchString.'.m3u8';
                 } else {
                     preg_match("/$this->masterKey.*\.m3u8$/", $result, $bestResult)[0];
                 }
@@ -253,7 +255,7 @@ class Client
     public function listHlsFiles()
     {
         // Get contents of *.m3u8 file
-        $ch = curl_init($this->baseUrl . '/' . $this->streamUrl);
+        $ch = curl_init($this->baseUrl.'/'.$this->streamUrl);
 
         curl_setopt_array(
             $ch,
@@ -293,11 +295,11 @@ class Client
     public function writeFiles()
     {
         // Open the file handler in files
-        $opHandle = fopen('files\\' . $this->programmeTitle . '.ts', 'a');
+        $opHandle = fopen('files\\'.$this->programmeTitle.'.ts', 'a');
 
         // Write the downloaded content to the handle .ts file
         foreach ($this->hlsFiles as $key) {
-            fwrite($opHandle, file_get_contents('downloads\\' . $key, 'r'));
+            fwrite($opHandle, file_get_contents('downloads\\'.$key, 'r'));
         }
 
         // Close the handle
@@ -318,7 +320,7 @@ class Client
     public function getFullProgramTitle()
     {
         // Download the Title of the program
-        $streamUrl = 'https://www.bbc.co.uk/iplayer/episode/' . $this->programmeId;
+        $streamUrl = 'https://www.bbc.co.uk/iplayer/episode/'.$this->programmeId;
 
         // Download iPlayer page for the program (no proxy needed)
         $ch = curl_init($streamUrl);
@@ -370,9 +372,11 @@ class Client
 
     private function downloadHlsFiles($fileName)
     {
-        $streamUrl = $this->baseUrl . '/' . $fileName;
+        $streamUrl = $this->baseUrl.'/'.$fileName;
 
-        if (!isset($fileName)) return false;
+        if (!isset($fileName)) {
+            return false;
+        }
 
         // Download TLS files
         $ch = curl_init($streamUrl);
@@ -398,7 +402,7 @@ class Client
         }
 
         // Set the output file name
-        $output_filename = 'downloads\\' . $fileName;
+        $output_filename = 'downloads\\'.$fileName;
 
         // Write file to downloads directory
         $fp = fopen($output_filename, 'w');
@@ -426,7 +430,7 @@ class Client
         $DirIterator = new DirectoryIterator('downloads');
         foreach ($DirIterator as $fileInfo) {
             if (!$fileInfo->isDot() && $fileInfo != 'README.md') {
-                unlink('downloads/' . $fileInfo->getFilename());
+                unlink('downloads/'.$fileInfo->getFilename());
             }
         }
 
