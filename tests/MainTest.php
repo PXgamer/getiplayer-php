@@ -14,6 +14,6 @@ class MainTest extends PHPUnit_Framework_TestCase
     {
         $client = new GetiPlayer\Client();
         $client->setUrl('http://www.bbc.co.uk/iplayer/episode/b088ppll/sherlock-series-4-2-the-lying-detective');
-        echo $client->getVideoId();
+        $this->assertSame('b088pnjk', $client->getVideoId());
     }
 }
