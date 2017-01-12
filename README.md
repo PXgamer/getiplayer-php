@@ -2,6 +2,8 @@
 
 An easy to use wrapper for the iPlayer download API written in PHP.
 
+This currently creates a single .ts file which can be encoded using Handbrake or another encoder.
+
 ## Usage
 
 __Include the class:__
