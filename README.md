@@ -27,3 +27,5 @@ $client = new \pxgamer\GetiPlayer\Client;
 use \pxgamer\GetiPlayer\Client;
 $client = new Client;
 ```
+
+_Note: This is based off of Tiiveni's original code from SquarePenguin._
