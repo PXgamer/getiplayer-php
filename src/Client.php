@@ -443,6 +443,20 @@ class Client
         // Reset all values
         $this->inputUrl =
         $this->videoId =
+        $this->inputUrl =
+        $this->searchString =
+        $this->videoId =
+        $this->discoveredUrl =
+        $this->baseUrl =
+        $this->masterKey =
+        $this->m3u8 =
+        $this->m3u8Base =
+        $this->m3u8DataLink =
+        $this->m3u8MasterKey =
+        $this->hlsFiles =
+        $this->programmeId =
+        $this->programmeTitle =
+        $this->streamUrl =
         $this->discoveredUrl = null;
 
         return true;
