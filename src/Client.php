@@ -84,8 +84,6 @@ class Client
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_BINARYTRANSFER => true,
                 CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_SSL_VERIFYHOST => 0,
-                CURLOPT_SSL_VERIFYPEER => 0,
             ]
         );
 
@@ -173,8 +171,6 @@ class Client
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_BINARYTRANSFER => true,
                 CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_SSL_VERIFYHOST => 0,
-                CURLOPT_SSL_VERIFYPEER => 0,
             ]
         );
 
@@ -263,8 +259,6 @@ class Client
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_BINARYTRANSFER => true,
                 CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_SSL_VERIFYHOST => 0,
-                CURLOPT_SSL_VERIFYPEER => 0,
             ]
         );
 
@@ -330,8 +324,6 @@ class Client
             [
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_SSL_VERIFYHOST => 0,
-                CURLOPT_SSL_VERIFYPEER => 0,
             ]
         );
 
@@ -387,8 +379,6 @@ class Client
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_BINARYTRANSFER => true,
                 CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_SSL_VERIFYHOST => 0,
-                CURLOPT_SSL_VERIFYPEER => 0,
             ]
         );
 
