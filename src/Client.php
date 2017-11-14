@@ -307,7 +307,7 @@ class Client
         curl_close($ch);
 
         // Parse for the video ID
-        $searchString = '/"vpid":"([a-z0-9]+?)"/i';
+        $searchString = '/"episode_id":"([a-z0-9]+?)"/i';
         $outputData = [];
 
         // Run the matcher
