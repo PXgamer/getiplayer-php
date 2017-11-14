@@ -9,8 +9,22 @@ use DirectoryIterator as DirectoryIterator;
  */
 class Client
 {
+    /**
+     * The BBC iPlayer API base uri.
+     */
     const BASE_URL = 'https://open.live.bbc.co.uk';
+    /**
+     * The processing directory.
+     */
+    const PROCESS_DIR = __DIR__.'/../resources/processing';
+    /**
+     * The output directory.
+     */
+    const OUTPUT_DIR = __DIR__.'/../resources/output';
 
+    /**
+     * @var array
+     */
     public $quality_array = [
         'highish' => '-audio_1=24000-video=1570000',
         'high' => '-audio_1=48000-video=5070000',
@@ -19,34 +33,80 @@ class Client
         'space' => '-audio_1=320000-video=8000000',
     ];
 
+    /**
+     * @var string
+     */
     public $inputUrl;
 
+    /**
+     * @var string
+     */
     public $searchString;
 
+    /**
+     * @var string
+     */
     public $videoId;
 
+    /**
+     * @var string
+     */
     public $discoveredUrl;
 
+    /**
+     * @var string
+     */
     public $baseUrl;
 
+    /**
+     * @var string
+     */
     public $masterKey;
 
+    /**
+     * @var string
+     */
     public $m3u8;
 
+    /**
+     * @var string
+     */
     public $m3u8Base;
 
+    /**
+     * @var string
+     */
     public $m3u8DataLink;
 
+    /**
+     * @var string
+     */
     public $m3u8MasterKey;
 
+    /**
+     * @var array
+     */
     public $hlsFiles;
 
+    /**
+     * @var string
+     */
     public $programmeId;
 
+    /**
+     * @var string
+     */
     public $programmeTitle;
 
+    /**
+     * @var string
+     */
     public $streamUrl;
 
+    /**
+     * @param string $inputURL
+     * @return string
+     */
     public function setUrl($inputURL)
     {
         $this->inputUrl = $inputURL;
@@ -54,6 +114,10 @@ class Client
         return $this->inputUrl;
     }
 
+    /**
+     * @param string $qualityString
+     * @return mixed|string
+     */
     public function setQuality($qualityString = 'highish')
     {
         $this->searchString = (isset($this->quality_array[$qualityString])) ? $this->quality_array[$qualityString] : '';
@@ -61,6 +125,9 @@ class Client
         return $this->searchString;
     }
 
+    /**
+     * @return bool|string
+     */
     public function getMediaISM()
     {
         // Set the media API url
@@ -74,6 +141,10 @@ class Client
         return $this->baseUrl;
     }
 
+    /**
+     * @param string $mediaSelectorURL
+     * @return bool|string
+     */
     private function getMediaSelection($mediaSelectorURL)
     {
         $ch = curl_init($mediaSelectorURL);
@@ -124,6 +195,9 @@ class Client
         return $finalResult;
     }
 
+    /**
+     * @return string
+     */
     public function getMasterKey()
     {
         // Stores all keys for usage with downloads
@@ -133,6 +207,9 @@ class Client
         return $this->masterKey;
     }
 
+    /**
+     * @return string
+     */
     public function getM3u8()
     {
         // Set the m3u8 url and base url
@@ -142,6 +219,9 @@ class Client
         return $this->m3u8;
     }
 
+    /**
+     * @return string
+     */
     public function getStream()
     {
         // Get the url for the stream data
@@ -151,6 +231,9 @@ class Client
         return $this->m3u8DataLink;
     }
 
+    /**
+     * @return string
+     */
     public function getM3u8MasterKey()
     {
         // Stores master key for m3u8
@@ -159,6 +242,10 @@ class Client
         return strstr($this->m3u8MasterKey, '.', true);
     }
 
+    /**
+     * @param string $masterUrl
+     * @return string
+     */
     public function getStreamData($masterUrl)
     {
         // Get m3u8 content
@@ -200,6 +287,9 @@ class Client
         return $finalResult;
     }
 
+    /**
+     * @return bool|string
+     */
     public function getVideoId()
     {
         // Connect to the input page
@@ -217,7 +307,7 @@ class Client
         curl_close($ch);
 
         // Parse for the video ID
-        $searchString = '/"vpid":"([a-z0-9]+?)"/i';
+        $searchString = '/"episode_id":"([a-z0-9]+?)"/i';
         $outputData = [];
 
         // Run the matcher
@@ -233,6 +323,10 @@ class Client
         return $this->videoId;
     }
 
+    /**
+     * @param array $fileList
+     * @return bool
+     */
     public function downloadFiles($fileList)
     {
         // Loop through files
@@ -248,6 +342,9 @@ class Client
         return true;
     }
 
+    /**
+     * @return array
+     */
     public function listHlsFiles()
     {
         // Get contents of *.m3u8 file
@@ -286,14 +383,17 @@ class Client
         return $this->hlsFiles;
     }
 
+    /**
+     * @return bool
+     */
     public function writeFiles()
     {
         // Open the file handler in files
-        $opHandle = fopen('files\\'.$this->programmeTitle.'.ts', 'a');
+        $opHandle = fopen(Client::OUTPUT_DIR.'\\'.$this->programmeTitle.'.ts', 'a');
 
         // Write the downloaded content to the handle .ts file
         foreach ($this->hlsFiles as $key) {
-            fwrite($opHandle, file_get_contents('downloads\\'.$key, 'r'));
+            fwrite($opHandle, file_get_contents(Client::PROCESS_DIR.'\\'.$key, 'r'));
         }
 
         // Close the handle
@@ -302,6 +402,9 @@ class Client
         return true;
     }
 
+    /**
+     * @return mixed
+     */
     public function getProgrammeId()
     {
         // Find full program title from BBC from the PID
@@ -311,6 +414,9 @@ class Client
         return $this->programmeId;
     }
 
+    /**
+     * @return string
+     */
     public function getFullProgramTitle()
     {
         // Download the Title of the program
@@ -362,6 +468,10 @@ class Client
         return $this->programmeTitle;
     }
 
+    /**
+     * @param string $fileName
+     * @return bool
+     */
     private function downloadHlsFiles($fileName)
     {
         $streamUrl = $this->baseUrl.'/'.$fileName;
@@ -392,7 +502,7 @@ class Client
         }
 
         // Set the output file name
-        $output_filename = 'downloads\\'.$fileName;
+        $output_filename = Client::PROCESS_DIR.'\\'.$fileName;
 
         // Write file to downloads directory
         $fp = fopen($output_filename, 'w');
@@ -402,25 +512,31 @@ class Client
         return $success;
     }
 
+    /**
+     * @return bool
+     */
     public function createDirectories()
     {
-        if (!is_dir('downloads')) {
-            mkdir('downloads');
+        if (!is_dir(Client::PROCESS_DIR)) {
+            mkdir(Client::PROCESS_DIR);
         }
-        if (!is_dir('files')) {
-            mkdir('files');
+        if (!is_dir(Client::OUTPUT_DIR)) {
+            mkdir(Client::OUTPUT_DIR);
         }
 
         return true;
     }
 
+    /**
+     * @return bool
+     */
     public function cleanDirectory()
     {
         // Remove the downloaded files
-        $DirIterator = new DirectoryIterator('downloads');
+        $DirIterator = new DirectoryIterator(Client::PROCESS_DIR);
         foreach ($DirIterator as $fileInfo) {
-            if (!$fileInfo->isDot() && $fileInfo != 'README.md') {
-                unlink('downloads/'.$fileInfo->getFilename());
+            if (!$fileInfo->isDot()) {
+                unlink('/'.$fileInfo->getFilename());
             }
         }
 
@@ -428,6 +544,9 @@ class Client
         return true;
     }
 
+    /**
+     * @return bool
+     */
     public function reset()
     {
         // Reset all values
