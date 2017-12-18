@@ -9,6 +9,8 @@ use DirectoryIterator as DirectoryIterator;
  */
 class Client
 {
+    public const MAX_CONNECTION_RETRIES = 10;
+
     /**
      * The BBC iPlayer API base uri.
      */
@@ -331,7 +333,7 @@ class Client
     {
         // Loop through files
         foreach ($fileList as $key) {
-            for ($retries = 0; $retries <= 10; ++$retries) {
+            for ($retries = 0; $retries <= self::MAX_CONNECTION_RETRIES; ++$retries) {
                 $success = $this->downloadHlsFiles($key);
                 if ($success == true) {
                     $retries = 10;
